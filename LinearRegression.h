@@ -29,19 +29,28 @@ public:
 	const Matrix& getY(){
 		return y;
 	}
-	const Matrix& getTheta(){
+	Matrix getTheta(){
 		return theta;
 	}
 	const Matrix& getGrad(){
 		return grad;
 	}
+	void setX(const Matrix &ob){
+		X = ob;
+	}
+	bool loadedData();
 	void computeCost(); // compute cost function J
 	void initTheta(int value = 0);
 	void createGradForTheta();
 	void updateGrad(); // No use regularize term
 	void addX0ForX();
-	//TO-DO
+	//DONE
 	void gradientDescent(int iter, long double lambda);
+
+	// Function featureNormalize return a normalize version of X. That need function mean()(average) and STD() (standard deviation) in class Matrix
+	Matrix featureNormalize();
+
+	void useNormalEquations();
 private:
 	Matrix X; // X of training
 	Matrix y; //y of training

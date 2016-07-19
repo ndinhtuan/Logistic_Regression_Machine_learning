@@ -99,9 +99,10 @@ void LinearRegression::updateGrad(){
 	}
 
 	grad = X * theta - y;
-	grad = X.transpose() * grad;
+	Matrix tmp = (X.transpose());
+	grad =  tmp * grad;
 	grad = grad * (1 / (double)m);
-	X.transpose();
+	//X.transpose();
 }
 
 void LinearRegression::gradientDescent(int iter, long double lambda){
@@ -129,9 +130,33 @@ void LinearRegression::addX0ForX(){
 	X.addX0();
 }
 
+bool LinearRegression::loadedData(){
+	return (m != 0 && n != 0);
+}
 
+Matrix LinearRegression::featureNormalize(){
+	if (!loadedData()){
+		cout << "Need to load data before use feature normalize. " << endl;
+		return X;
+	}
 
+	Matrix result(X);
+	Matrix average = X.mean();
+	Matrix sigma = X.STD();
+	cout << average << sigma;
 
+	result = result - average;
+	result = result / sigma;
+	return result;
+}
+
+void LinearRegression::useNormalEquations(){
+	if (!loadedData()){
+		cout << "Need to load data for using normal equations to compute theta." << endl;
+		return;
+	}
+	theta = ((X.transpose() * X) ^ -1)*X.transpose()*y;
+}
 
 
 

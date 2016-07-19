@@ -87,35 +87,56 @@ ostream& operator<<(ostream &os, const Size &ob){
 	return os;
 }
 
-Matrix& Matrix::transpose(){
+Matrix Matrix::transpose(){
 	if (mat == NULL || (size.rows == 0 || size.cols == 0)){
 		cout << "Matrix is empty." << endl;
 		return *this;
 	}
 
-	long double **tmpMat = mat;
-
-	int tmp = size.cols;
-	size.cols = size.rows;
-	size.rows = tmp;
-
-	mat = new long double*[size.rows];
-	for (int i = 0; i < size.rows; i++){
-		mat[i] = new long double[size.cols];
-	}
+	Matrix result(size.cols, size.rows);
 
 	for (int i = 0; i < size.rows; i++){
 
 		for (int j = 0; j < size.cols; j++){
 
-			mat[i][j] = tmpMat[j][i];
+			result.mat[j][i] = mat[i][j];
 
 		}
 
 	}
 
-	return *this;
+	return result;
 }
+
+//Matrix& Matrix::transpose(){
+//	if (mat == NULL || (size.rows == 0 || size.cols == 0)){
+//		cout << "Matrix is empty." << endl;
+//		return *this;
+//	}
+//
+//	long double **tmpMat = mat;
+//
+//	int tmp = size.cols;
+//	size.cols = size.rows;
+//	size.rows = tmp;
+//
+//	mat = new long double*[size.rows];
+//	for (int i = 0; i < size.rows; i++){
+//		mat[i] = new long double[size.cols];
+//	}
+//
+//	for (int i = 0; i < size.rows; i++){
+//
+//		for (int j = 0; j < size.cols; j++){
+//
+//			mat[i][j] = tmpMat[j][i];
+//
+//		}
+//
+//	}
+//
+//	return *this;
+//}
 
 void Matrix::deleteMat(){
 
@@ -288,7 +309,7 @@ Matrix& Matrix::operator+=(long double scalar){
 	return *this;
 }
 
-Matrix Matrix::operator+(const Matrix &ob2){
+Matrix Matrix::operator+(const Matrix &ob2){ // matrix + vector(same row) or matrix + vector (same column)
 	if ((size.rows == 0 || size.cols == 0) || mat == NULL){
 		cout << "Need to init matrix before use this attribute." << endl;
 		return *this;
@@ -299,24 +320,57 @@ Matrix Matrix::operator+(const Matrix &ob2){
 		return *this;
 	}
 
-	if (size.rows != ob2.size.rows || size.cols != ob2.size.cols){
+	if (!((size.rows == ob2.size.rows && ob2.size.cols == 1) ||   // Check whether ob2 is vector (has a element (col or row) = 1);
+		  (size.cols == ob2.size.cols && ob2.size.rows == 1))){
+
 		cout << "Error : " << size << " +      " << ob2.size;
 		return *this;
 	}
 
 	Matrix result(*this); 
 
-	for (int i = 0; i < result.size.rows; i++){
+	if (size.rows == ob2.size.rows && size.cols == ob2.size.cols){ // operator + normal
 
-		for (int j = 0; j < result.size.cols; j++){
+		for (int i = 0; i < result.size.rows; i++){
 
-			result.mat[i][j] += ob2.mat[i][j];
+			for (int j = 0; j < result.size.cols; j++){
+
+				result.mat[i][j] += ob2.mat[i][j];
+
+			}
 
 		}
 
+		return result;
 	}
 
-	return result;
+	if (size.rows == ob2.size.rows){ // ob2 is vector, that has col = 1
+
+		for (int col = 0; col < size.cols; col++){
+
+			for (int row = 0; row < size.rows; row++){
+				result.mat[row][col] += ob2.mat[row][0];
+			}
+
+		}
+
+		return result;
+	}
+	
+	if (size.cols == ob2.size.cols){ // ob2 is vector, that has row = 1
+
+		for (int row = 0; row < size.rows; row++){
+
+			for (int col = 0; col < size.cols; col++){
+
+				result.mat[row][col] += ob2.mat[0][col];
+
+			}
+
+		}
+
+		return result;
+	}
 }
 
 Matrix Matrix::operator*(const Matrix &ob2){
@@ -389,22 +443,57 @@ Matrix Matrix::operator-(const Matrix &ob2){
 		return *this;
 	}
 
-	if (size.rows != ob2.size.rows || size.cols != ob2.size.cols){
-		cout << "Error : " << size << " +      " << ob2.size;
+	if (!((size.rows == ob2.size.rows && ob2.size.cols == 1) ||   // Check whether ob2 is vector (has a element (col or row) = 1);
+		(size.cols == ob2.size.cols && ob2.size.rows == 1))){
+
+		cout << "Error : " << size << " -      " << ob2.size;
 		return *this;
 	}
 
 	Matrix result(*this);
 
-	for (int i = 0; i < result.size.rows; i++){
+	if (size.rows == ob2.size.rows && size.cols == ob2.size.cols){ // operator - normal
 
-		for (int j = 0; j < result.size.cols; j++){
-			result.mat[i][j] -= ob2.mat[i][j];
+		for (int i = 0; i < result.size.rows; i++){
+
+			for (int j = 0; j < result.size.cols; j++){
+
+				result.mat[i][j] -= ob2.mat[i][j];
+
+			}
+
 		}
 
+		return result;
 	}
 
-	return result;
+	if (size.rows == ob2.size.rows){ // ob2 is vector, that has col = 1
+
+		for (int col = 0; col < size.cols; col++){
+
+			for (int row = 0; row < size.rows; row++){
+				result.mat[row][col] -= ob2.mat[row][0];
+			}
+
+		}
+
+		return result;
+	}
+
+	if (size.cols == ob2.size.cols){ // ob2 is vector, that has row = 1
+
+		for (int row = 0; row < size.rows; row++){
+
+			for (int col = 0; col < size.cols; col++){
+
+				result.mat[row][col] -= ob2.mat[0][col];
+
+			}
+
+		}
+
+		return result;
+	}
 }
 
 Matrix Matrix::operator*(long double scalar){
@@ -591,7 +680,7 @@ Matrix& Matrix::addX0(){
 	return *this;
 }
 
-Matrix Matrix::operator^(int num){
+Matrix Matrix::operator^(double num){
 	if (!existMat()){
 		return *this;
 	}
@@ -600,7 +689,7 @@ Matrix Matrix::operator^(int num){
 
 		for (int col = 0; col < size.cols; col++){
 
-			mat[row][col] = pow(mat[row][col], 2);
+			mat[row][col] = pow(mat[row][col], num);
 			
 		}
 
@@ -609,8 +698,150 @@ Matrix Matrix::operator^(int num){
 	return *this;
 }
 
+Matrix Matrix::mean(){
+	Matrix result(1, size.cols, 0);
+
+	if (!existMat()){
+		return result;
+	}
+
+	for (int col = 0; col < size.cols; col++){
+
+		for (int row = 0; row < size.rows; row++){
+			result.mat[0][col] += mat[row][col];
+		}
+
+	}
+
+	result = result * ((double)1 / size.rows);
+
+	return result;
+}
+
+Matrix Matrix::operator/(double scalar){
+
+	if (!existMat()){
+		return *this;
+	}
+
+	Matrix result(*this);
+
+	if (scalar == 0){
+		cout << "Not divide matrix for 0" << endl;
+		return result;
+	}
+	else{
+
+		for (int row = 0; row < size.rows; row++){
+
+			for (int col = 0; col < size.cols; col++){
+
+				result.mat[row][col] /= scalar;
+
+			}
+
+		}
+
+		return result;
+	}
 
 
+}
+
+Matrix Matrix::STD(){
+	Matrix result(1, size.cols);
+
+	if (!existMat()){
+		return result;
+	}
+
+	result = *this;
+	result = (result - result.mean()) ^ 2;
+	result = result.sum();
+	result = result * ((double)1 / (size.rows - 1));
+	result = result ^ ((double)1 / 2);
+
+	return result;
+}
+
+Matrix Matrix::operator/(const Matrix &ob2){
+
+	if ((size.rows == 0 || size.cols == 0) || mat == NULL){
+		cout << "Need to init matrix before use this attribute." << endl;
+		return *this;
+	}
+
+	if ((ob2.size.rows == 0 || ob2.size.cols == 0) || ob2.mat == NULL){
+		cout << "Need to init matrix before use this attribute." << endl;
+		return *this;
+	}
+
+	if (!((size.rows == ob2.size.rows && ob2.size.cols == 1) ||   // Check whether ob2 is vector (has a element (col or row) = 1);
+		(size.cols == ob2.size.cols && ob2.size.rows == 1))){
+
+		cout << "Error : " << size << " *      " << ob2.size;
+		return *this;
+	}
+
+	Matrix result(*this);
+
+	if (size.rows == ob2.size.rows && size.cols == ob2.size.cols){ // operator + normal
+
+		for (int i = 0; i < result.size.rows; i++){
+
+			for (int j = 0; j < result.size.cols; j++){
+
+				if (ob2.mat[i][j] == 0){
+					cout << "Not devide for ZERO." << endl;
+					cin.ignore(2);
+				}
+				result.mat[i][j] /= ob2.mat[i][j];
+
+			}
+
+		}
+
+		return result;
+	}
+
+	if (size.rows == ob2.size.rows){ // ob2 is vector, that has col = 1
+
+		for (int col = 0; col < size.cols; col++){
+
+			for (int row = 0; row < size.rows; row++){
+
+				if (ob2.mat[row][0] == 0){
+					cout << "Not devide for ZERO." << endl;
+					cin.ignore(2);
+				}
+				result.mat[row][col] /= ob2.mat[row][0];
+			}
+
+		}
+
+		return result;
+	}
+
+	if (size.cols == ob2.size.cols){ // ob2 is vector, that has row = 1
+
+		for (int row = 0; row < size.rows; row++){
+
+			for (int col = 0; col < size.cols; col++){
+
+				if (ob2.mat[0][col] == 0){
+					cout << "Not devide for ZERO." << endl;
+					cin.ignore(2);
+				}
+
+				result.mat[row][col] /= ob2.mat[0][col];
+
+			}
+
+		}
+
+		return result;
+	}
+}
 
 
 

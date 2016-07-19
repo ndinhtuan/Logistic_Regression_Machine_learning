@@ -31,7 +31,7 @@ public:
 	void setMat(long double **mat){
 		this->mat = mat;
 	}
-	Matrix& transpose();
+	Matrix transpose();
 	void createMatRand(int ker);
 	void createMat(int rows, int cols, int value = 0);
 	Size getSize() const;
@@ -46,7 +46,10 @@ public:
 	Matrix operator+(const Matrix&);
 	Matrix operator-(const Matrix&);
 	long double* operator[](int i);
-	Matrix operator^(int num);
+	Matrix operator/(double scalar);
+	Matrix operator/(const Matrix &ob2);
+
+	Matrix operator^(double num);
 	Matrix multiEachElement(const Matrix&);
 	Matrix plusEachElement(const Matrix&); // NO NEED
 	Matrix minusEachElement(const Matrix&); // NO NEED
@@ -62,6 +65,12 @@ public:
 
 	// add X0 add colum X0 = size.rows * 1 [1] at left matrix -> serve for machine learning .
 	Matrix& addX0();
+
+	// Compute average of matrix follow column
+	Matrix mean();
+
+	//standard deviation.
+	Matrix STD();
 private:
 	long double **mat;
 	Size size;

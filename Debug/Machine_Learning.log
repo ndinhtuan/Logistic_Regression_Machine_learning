@@ -1,4 +1,4 @@
-﻿Build started 7/18/2016 10:13:21 AM.
+﻿Build started 7/19/2016 2:31:14 PM.
      1>Project "C:\Users\9470m\Documents\Visual Studio 2013\Projects\Machine_Learning\Machine_Learning\Machine_Learning.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Source.cpp
@@ -13,4 +13,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.92
+Time Elapsed 00:00:01.20
