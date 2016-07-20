@@ -17,6 +17,8 @@ bool operator!=(const Size &ob1, const Size &ob2);
 class Matrix
 {
 	friend ostream& operator<<(ostream&, const Matrix&);
+	friend Matrix operator+(Matrix &, double scalar);
+	friend Matrix operator-(double scalar, Matrix &);
 public:
 	Matrix();
 	Matrix(int rows, int cols, int value = 0);
@@ -71,11 +73,7 @@ public:
 
 	//standard deviation.
 	Matrix STD();
-private:
-	long double **mat;
-	Size size;
 
-	void deleteMat();
 	bool existMat(){
 		if (size.rows == 0 || size.cols == 0 || mat == NULL){
 			std::cout << "Need to init matrix" << std::endl;
@@ -83,5 +81,12 @@ private:
 		}
 		return true;
 	}
+
+private:
+	long double **mat;
+	Size size;
+
+	void deleteMat();
+	
 };
 #endif

@@ -51,6 +51,8 @@ public:
 	Matrix featureNormalize();
 
 	void useNormalEquations();
+
+	double trainAccuracy(double threshold = 0.01);
 private:
 	Matrix X; // X of training
 	Matrix y; //y of training

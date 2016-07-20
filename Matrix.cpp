@@ -685,17 +685,19 @@ Matrix Matrix::operator^(double num){
 		return *this;
 	}
 
+	Matrix result(*this);
+
 	for (int row = 0; row < size.rows; row++){
 
 		for (int col = 0; col < size.cols; col++){
 
-			mat[row][col] = pow(mat[row][col], num);
+			result.mat[row][col] = pow(mat[row][col], num);
 			
 		}
 
 	}
 
-	return *this;
+	return result;
 }
 
 Matrix Matrix::mean(){
@@ -843,7 +845,45 @@ Matrix Matrix::operator/(const Matrix &ob2){
 	}
 }
 
+Matrix operator+(Matrix &ob, double scalar){
+	if (!ob.existMat()){
+		return ob;
+	}
 
+	Matrix result(ob);
+
+	for (int row = 0; row < ob.size.rows; row++){
+
+		for (int col = 0; col < ob.size.cols; col++){
+
+			result.mat[row][col] += scalar;
+
+		}
+
+	}
+
+	return result;
+}
+
+Matrix operator-(double scalar, Matrix &ob){
+	if (!ob.existMat()){
+		return ob;
+	}
+
+	Matrix result(ob);
+
+	for (int row = 0; row < ob.size.rows; row++){
+
+		for (int col = 0; col < ob.size.cols; col++){
+
+			result.mat[row][col] = scalar - result.mat[row][col];
+
+		}
+
+	}
+
+	return result;
+}
 
 
 

@@ -65,11 +65,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="LinearRegression.h" />
+    <ClInclude Include="Logistic.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MatrixLib.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LinearRegression.cpp" />
+    <ClCompile Include="Logistic.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="MatrixLib.cpp" />
     <ClCompile Include="Source.cpp" />

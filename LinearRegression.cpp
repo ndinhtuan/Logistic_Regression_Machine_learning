@@ -158,6 +158,19 @@ void LinearRegression::useNormalEquations(){
 	theta = ((X.transpose() * X) ^ -1)*X.transpose()*y;
 }
 
+double LinearRegression::trainAccuracy(double threshold){
+	int trueTrain = m;
+	Matrix _y = X * theta;
 
+	for (int i = 0; i < m; i++){
+
+		if (_y[i][0] - y[i][0] > threshold){
+			trueTrain--;
+		}
+
+	}
+
+	return 100 * (double)trueTrain / m;
+}
 
 

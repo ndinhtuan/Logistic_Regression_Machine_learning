@@ -4,5 +4,6 @@
 
 Matrix eyes(int dim);
 Matrix zeros(int rows, int cols);
+Matrix log(Matrix &);
 #endif
 
