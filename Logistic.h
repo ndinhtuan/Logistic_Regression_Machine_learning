@@ -35,6 +35,12 @@ public:
 	Matrix getTheta(){
 		return theta;
 	}
+
+	// predict 
+	void loadForPredict(const char*);
+	void getThetaFromFile(const char*);
+	void predict();
+	void saveY(const char*);
 private:
 	Matrix X;
 	Matrix y;

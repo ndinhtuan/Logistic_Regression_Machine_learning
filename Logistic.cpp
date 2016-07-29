@@ -9,8 +9,10 @@ using std::endl;
 #include <fstream>
 
 using std::ifstream;
+using std::ofstream;
 
 #include <conio.h>
+#include <cassert>
 
 Logistic::Logistic()
 {
@@ -142,7 +144,6 @@ void Logistic::gradientDescent(int iter, double alpha){
 
 		theta = theta - grad * alpha;
 		updateGrad();
-
 	}
 
 	computeCost();
@@ -185,4 +186,64 @@ void Logistic::autoGradientDescent(double alpha, double threshold){
 		computeCost();
 	}
 
+}
+
+void Logistic::loadForPredict(const char* fileName){
+	ifstream input(fileName);
+	input >> m >> n;
+
+	X.createMat(m, n);
+
+	for (int row = 0; row < m; row++){
+
+		for (int col = 0; col < n; col++){
+			input >> X[row][col];
+		}
+
+	}
+
+	cout << "Load data success !" << endl;
+}
+
+void Logistic::getThetaFromFile(const char *fileName){
+	if (!loadedData()){
+		cout << "Need to load data before using get theta from file." << endl;
+		return;
+	}
+
+	ifstream input(fileName);
+
+	if (!input.is_open()){
+		cout << "Cannot access file " << fileName << " to get data." << endl;
+		return;
+	}
+
+	theta.createMat(n + 1, 1);
+
+	for (int i = 0; i < n + 1; i++){
+		input >> theta[i][0];
+	}
+}
+
+void Logistic::predict(){
+	if (!loadDataAndInitTheta()){
+		cout << "Need to load data and get data before predict. " << endl;
+		return;
+	}
+
+	X.addX0();
+	y = X * theta;
+	y = sigmoid(y);
+
+	for (int row = 0; row < y.getSize().rows; row++){
+		if (y[row][0] >= 0.5){
+			y[row][0] = 1;
+		}
+		else{
+			y[row][0] = 0;
+		}
+	}
+	cout << y;
+	ofstream output("y.txt");
+	output << y;
 }
